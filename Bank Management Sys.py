@@ -81,3 +81,47 @@ def displaySp(num):
         print("No records to Search")
     if not found :
         print("No existing record with this number")
+    
+def depositAndWithdraw(num1,num2): 
+    file = pathlib.Path("accounts.data")
+    if file.exists ():
+        infile = open('accounts.data','rb')
+        mylist = pickle.load(infile)
+        infile.close()
+        os.remove('accounts.data')
+        for item in mylist :
+            if item.accNo == num1 :
+                if num2 == 1 :
+                    amount = int(input("Enter the amount to deposit : "))
+                    item.deposit += amount
+                    print("Your account is updted")
+                elif num2 == 2 :
+                    amount = int(input("Enter the amount to withdraw : "))
+                    if amount <= item.deposit :
+                        item.deposit -=amount
+                    else :
+                        print("You cannot withdraw larger amount")
+                
+    else :
+        print("No records to Search")
+    outfile = open('newaccounts.data','wb')
+    pickle.dump(mylist, outfile)
+    outfile.close()
+    os.rename('newaccounts.data', 'accounts.data')
+
+    
+def deleteAccount(num):
+    file = pathlib.Path("accounts.data")
+    if file.exists ():
+        infile = open('accounts.data','rb')
+        oldlist = pickle.load(infile)
+        infile.close()
+        newlist = []
+        for item in oldlist :
+            if item.accNo != num :
+                newlist.append(item)
+        os.remove('accounts.data')
+        outfile = open('newaccounts.data','wb')
+        pickle.dump(newlist, outfile)
+        outfile.close()
+        os.rename('newaccounts.data', 'accounts.data')
